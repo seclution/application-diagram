@@ -15,3 +15,10 @@ This is a simple application created using [AppWithinMinutes](http://extensions.
 * Translations: N/A
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
+
+Troubleshooting
+---------------
+
+Diagrams created with other versions of the draw.io editor can sometimes be stored as a `<mxfile>` element. Such diagrams require the updated editor shipped with this application in order to be edited properly. If you open a diagram and only see XML content, install the new editor version and re-open the page.
+
+When importing the XAR in XWiki, use **Replace Document**. This restores `Diagram.DiagramMacro` and ensures that the macros continue to work after the import.
