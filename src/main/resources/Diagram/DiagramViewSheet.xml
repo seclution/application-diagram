@@ -141,14 +141,11 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>// mxGraph Client Configuration
-var mxBasePath = "$services.webjars.url('org.xwiki.contrib:mxgraph-client', '')";
-var mxLoadResources = false;
-
-var mxGraphViewerBasePath = "$services.webjars.url('org.xwiki.contrib:mxgraph-editor', '')";
-
-// Diagram Viewer Configuration
+      <code>// Diagram Viewer Configuration
 var diagramViewerBasePath = "$services.webjars.url('org.xwiki.contrib:draw.io', '')";
+// mxGraph Client Configuration
+var mxBasePath = diagramViewerBasePath + 'mxgraph/';
+var mxLoadResources = false;
 var STENCIL_PATH = diagramViewerBasePath + 'stencils';
 var IMAGE_PATH = diagramViewerBasePath + 'images';
 var STYLE_PATH = CSS_PATH = diagramViewerBasePath + 'styles';
@@ -159,18 +156,7 @@ var urlParams = {};
 
 require.config({
   paths: {
-    'mxgraph-client': mxBasePath + 'mxClient.min',
-    'sanitizer': mxGraphViewerBasePath + 'sanitizer/sanitizer.min',
-    'mxgraph-viewer': mxGraphViewerBasePath + 'mxGraphViewer.min',
-    'draw.io.viewer': diagramViewerBasePath + 'js/draw.io.viewer.min'
-  },
-  shim: {
-    'mxgraph-viewer': {
-      deps: ['mxgraph-client', 'sanitizer']
-    },
-    'draw.io.viewer': {
-      deps: ['mxgraph-viewer']
-    }
+    'draw.io.viewer': diagramViewerBasePath + 'js/viewer.min'
   }
 });</code>
     </property>
