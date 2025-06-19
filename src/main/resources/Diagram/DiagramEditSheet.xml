@@ -321,8 +321,27 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       this.setData(mxUtils.getPrettyXml(this.ui.editor.getGraphXml()));
     },
     open: function() {
+      // The stored content can either be a raw &lt;mxGraphModel&gt; (older
+      // Draw.io format) or an &lt;mxfile&gt; with one or more diagrams. We keep
+      // backward compatibility by detecting the latter and extracting the
+      // first diagram's model.
       var graphXML = this.getData() || '&lt;mxGraphModel/&gt;';
-      this.ui.editor.setGraphXml(mxUtils.parseXml(graphXML).documentElement);
+      var doc = mxUtils.parseXml(graphXML);
+      var root = doc.documentElement;
+      if (root.nodeName === 'mxfile') {
+        var diagram = root.getElementsByTagName('diagram')[0];
+        if (diagram) {
+          var data = diagram.textContent;
+          // Diagram data in &lt;mxfile&gt; may be compressed so we
+          // decompress it when needed.
+          if (diagram.getAttribute('compressed') === 'true') {
+            data = Graph.decompress(data);
+          }
+          doc = mxUtils.parseXml(data);
+          root = doc.documentElement;
+        }
+      }
+      this.ui.editor.setGraphXml(root);
       this.changeListener = mxUtils.bind(this, function(sender, eventObject) {
         this.setModified(true);
       });
