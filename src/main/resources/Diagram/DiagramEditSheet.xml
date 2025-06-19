@@ -135,13 +135,12 @@
     </property>
     <property>
       <code>// mxGraph Client Configuration
-var mxBasePath = "$services.webjars.url('org.xwiki.contrib:mxgraph-client', '')";
-var mxLanguage = '$xcontext.locale';
-
-var mxGraphEditorBasePath = "$services.webjars.url('org.xwiki.contrib:mxgraph-editor', '')";
-
 // Diagram Editor Configuration
 var diagramEditorBasePath = "$services.webjars.url('org.xwiki.contrib:draw.io', '')";
+var mxBasePath = diagramEditorBasePath + 'mxgraph/';
+var mxLanguage = '$xcontext.locale';
+
+var mxGraphEditorBasePath = diagramEditorBasePath;
 var RESOURCES_PATH = diagramEditorBasePath + 'resources';
 // Comment out the following line when using the basic mxGraph Editor.
 var RESOURCE_BASE = RESOURCES_PATH + '/dia';
@@ -186,38 +185,11 @@ var DriveFile = DropboxFile = GitHubFile = OneDriveFile = false;
 
 require.config({
   paths: {
-    'mxgraph-init': diagramEditorBasePath + 'js/draw.io.init.min',
-    'mxgraph-client': mxBasePath + 'mxClient.min',
     'jscolor': mxGraphEditorBasePath + 'jscolor/jscolor.min',
     'sanitizer': mxGraphEditorBasePath + 'sanitizer/sanitizer.min',
-    'mxgraph-editor': mxGraphEditorBasePath + 'mxGraphEditor.min',
-    'base64': diagramEditorBasePath + 'js/deflate/base64.min',
-    'pako': diagramEditorBasePath + 'js/deflate/pako.min',
-    'spin': diagramEditorBasePath + 'js/spin/spin.min',
-    'draw.io': diagramEditorBasePath + 'js/draw.io.min',
-  },
-  shim: {
-    'mxgraph-client': {
-      deps: ['mxgraph-init']
-    },
-    'mxgraph-editor': {
-      deps: ['mxgraph-client', 'jscolor', 'sanitizer']
-    },
-    'draw.io': {
-      deps: ['mxgraph-editor', 'base64', 'pako-global', 'spin-global']
-    }
+    'draw.io': diagramEditorBasePath + 'js/app.min',
   }
-})
-
-define('pako-global', ['pako'], function(pako) {
-  // draw.io expects a global variable.
-  window.pako = pako;
-});
-
-define('spin-global', ['spin'], function(spin) {
-  // draw.io expects a global variable.
-  window.Spinner = spin;
-});</code>
+})</code>
     </property>
     <property>
       <name>Configuration</name>
@@ -941,7 +913,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     </property>
     <property>
       <code>/* The diagram editor styles should be loaded after the skin and before our overwrites. */
-@import url("$services.webjars.url('org.xwiki.contrib:mxgraph-editor', 'styles/grapheditor.css')");
+@import url("$services.webjars.url('org.xwiki.contrib:draw.io', 'styles/grapheditor.css')");
 
 .diagram-editor {
   height: 600px;
