@@ -292,6 +292,9 @@ require.config({
       });
       return this.each(function() {
         var xmlString = $(this).data('model');
+        if (!xmlString) {
+          console.warn('No diagram model found for viewer');
+        }
         console.debug('Parsing diagram XML', xmlString);
         var xmlDoc = mxUtils.parseXml(xmlString);
         console.debug('Parsed diagram DOM', xmlDoc.documentElement);
@@ -308,9 +311,9 @@ require.config({
       Graph.prototype.defaultThemes = Graph.prototype.defaultThemes || {};
       Graph.prototype.defaultThemes[Graph.prototype.defaultThemeName] = response.getDocumentElement();
       diagramViewerDeferred.resolve();
-    }, function() {
+    }, function(error) {
       // Failed to load the theme.
-      console.debug('Failed to load viewer theme');
+      console.error('Failed to load viewer theme', error);
       diagramViewerDeferred.reject();
     });
 
@@ -413,6 +416,8 @@ require.config({
   diagramViewerPromise.done(function() {
       console.debug('Diagram viewer module loaded');
       $('.diagram').viewDiagram();
+    }).fail(function(error) {
+      console.error('Failed to initialize diagram viewer', error);
     });
 });</code>
     </property>
