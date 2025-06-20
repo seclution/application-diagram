@@ -339,18 +339,29 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       return this.title;
     },
     getData: function() {
+      console.debug('Getting diagram data from input', this.input.attr('name'));
       return this.input.val();
     },
     setData: function(data) {
+      console.debug('Setting diagram data for input', this.input.attr('name'));
       this.input.val(data);
     },
     updateFileData: function() {
       // We overwrite the base implementation because we don't want to support files that contain multiple diagrams.
+      console.debug('Updating stored diagram data');
       this.setData(mxUtils.getPrettyXml(this.ui.editor.getGraphXml()));
     },
     open: function() {
-      var graphXML = this.getData() || '&lt;mxGraphModel/&gt;';
-      this.ui.editor.setGraphXml(mxUtils.parseXml(graphXML).documentElement);
+      console.debug('Opening diagram file');
+      var graphXML = this.getData();
+      if (!graphXML) {
+        console.warn('No diagram data found; starting with empty graph');
+        graphXML = '&lt;mxGraphModel/&gt;';
+      }
+      console.debug('Parsing diagram XML', graphXML);
+      var graphDocument = mxUtils.parseXml(graphXML);
+      console.debug('Parsed diagram DOM', graphDocument.documentElement);
+      this.ui.editor.setGraphXml(graphDocument.documentElement);
       this.changeListener = mxUtils.bind(this, function(sender, eventObject) {
         this.setModified(true);
       });
@@ -359,6 +370,9 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   });
 
   var forEachOpenedFile = function(visitor) {
+    if (files.length === 0) {
+      console.warn('No diagram files currently opened');
+    }
     files.forEach(function(file) {
       if (file.getUi() &amp;&amp; file.getUi().getCurrentFile() === file) {
         visitor(file);
@@ -381,14 +395,20 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     };
 
   // We need to update the form fields before the form is validated (for Preview, Save and Save &amp; Continue).
-  $(document).on('xwiki:actions:beforePreview xwiki:actions:beforeSave', updateFormFields);
+  $(document).on('xwiki:actions:beforePreview xwiki:actions:beforeSave', function() {
+    console.debug('xwiki:actions:beforePreview/beforeSave event');
+    updateFormFields();
+  });
 
   $(document).on('xwiki:actions:beforeSave', function() {
+    console.debug('Preparing diagram SVG before save');
     forEachOpenedFile(function(file) {
       var svgInput = file.input.next('.diagram-svg');
       if (svgInput.length &gt; 0) {
         var svgRoot = file.getUi().editor.graph.getSvg('#ffffff', true, false, false, null, true);
         svgInput.val(mxUtils.getXml(svgRoot));
+      } else {
+        console.warn('SVG input not found for', file.input.attr('name'));
       }
     });
   });
@@ -400,6 +420,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       // We reset the dirty field on 'xwiki:actions:save' only if it's not a Save &amp; Continue. Otherwise we wait for
       // 'xwiki:document:saved' to be sure the document was saved.
       if (!data || !data['continue']) {
+        console.debug('Handling action', event.type);
         submitInProgress = event.type === 'xwiki:actions:preview' || event.type === 'xwiki:actions:save';
         resetDirty();
       }
@@ -409,6 +430,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     // Update the form fields before the page is unloaded in order to allow the browser to cache their values
     // (Back-Forward and Soft Reload cache). The form fields have already been updated (for validation) if a submit
     // is currently in progress.
+    console.debug('beforeunload event');
     if (!submitInProgress) {
       updateFormFields();
     } else {
@@ -725,6 +747,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
     mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
   mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(response) {
+    console.debug('Editor resources loaded');
     // Adds bundle text to resources.
     mxResources.parse(response[0].getText());
 
@@ -732,8 +755,9 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     themes[Graph.prototype.defaultThemeName] = response[1].getDocumentElement();
 
     diagramEditorDeferred.resolve();
-  }, function() {
+  }, function(error) {
     // Failed to load resources.
+    console.error('Failed to load editor resources', error);
     diagramEditorDeferred.reject();
   });
 
@@ -836,6 +860,8 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   diagramEditorPromise.done(function() {
       console.debug('Diagram editor module loaded');
       $('.diagram-editor').editDiagram();
+    }).fail(function(error) {
+      console.error('Failed to initialize diagram editor', error);
     });
 });</code>
     </property>
