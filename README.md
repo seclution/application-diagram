@@ -5,6 +5,12 @@ Create various types of diagrams using [draw.io](https://www.draw.io/).
 
 This is a simple application created using [AppWithinMinutes](http://extensions.xwiki.org/xwiki/bin/view/Extension/App+Within+Minutes+Application) and integrating [jgraph/draw.io](https://github.com/jgraph/draw.io/). It supports both editing and viewing diagrams. Each diagram is stored in a wiki page. It doesn't require any external services in order to work properly.
 
+## Development Notes
+
+All updates to this application should be documented in this file to keep track
+of integration work and upgrade steps. Always mention the draw.io version in use
+and note any important changes or debugging improvements.
+
 * Project Lead: [Oana-Lavinia Florean](https://www.xwiki.org/xwiki/bin/view/XWiki/OanaLaviniaFlorean)
 * [Documentation & Download](https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram+Application)
 * [Issue Tracker](https://jira.xwiki.org/browse/XADIAGRAM)
@@ -23,9 +29,9 @@ Application.
 
 ## Updating to a newer draw.io version
 
-This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`). The dependency
-has been updated to `24.5.5` using the sources under `drawio_sources`. When upgrading the application
-make sure to:
+This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`).
+The dependency was later switched to `24.5.5` and now targets `27.0.9` using the
+sources under `drawio_sources`. When upgrading the application make sure to:
 
 1. Replace the old WebJar dependency in `pom.xml` with a WebJar built from the provided sources.
 2. Keep the current integration logic (editor initialization, macro code, storage format) so that diagrams
@@ -34,6 +40,17 @@ make sure to:
    compatibility with earlier versions of the application.
 4. Ensure that no additional external services are enabled in the new `draw.io` build to preserve the
    self-contained nature of this application.
+
+To build a WebJar locally run the following commands inside `drawio_sources/drawio`:
+
+```
+mvn -Pwebjar clean package
+mvn install:install-file -Dfile=target/draw.io-webjar-27.0.9.jar \
+    -DgroupId=org.xwiki.contrib -DartifactId=draw.io -Dversion=27.0.9 -Dpackaging=jar
+```
+
+The second command installs the freshly built WebJar in your local Maven repository so
+that the Diagram Application can depend on it during development.
 
 These guidelines will help updating the code base while maintaining full backward compatibility with
 existing XWiki installations.
