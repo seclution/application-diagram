@@ -28,6 +28,8 @@ embedded draw.io WebJar and they are *not* used during the build of the Diagram
 Application. Contributors should not attempt to run Maven inside this folder.
 Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-contrib/draw.io)
 repository when building a new WebJar.
+When upgrading, do not commit the libraries located under `src/main/webapp/WEB-INF/lib`. They are produced by the draw.io build and should remain outside version control.
+
 
 ## draw.io-api
 
