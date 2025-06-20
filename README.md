@@ -22,10 +22,12 @@ and note any important changes or debugging improvements.
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
 
-The `drawio_sources` directory stores a copy of the upstream draw.io source code.
-These files are provided only as a reference when upgrading the embedded
-draw.io WebJar and they are **not** used during the build of the Diagram
-Application.
+The `drawio_sources` directory stores a copy of the upstream draw.io source
+code. These files are provided **only** as a reference when upgrading the
+embedded draw.io WebJar and they are *not* used during the build of the Diagram
+Application. Contributors should not attempt to run Maven inside this folder.
+Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-contrib/draw.io)
+repository when building a new WebJar.
 
 ## Updating to a newer draw.io version
 
@@ -41,16 +43,17 @@ sources under `drawio_sources`. When upgrading the application make sure to:
 4. Ensure that no additional external services are enabled in the new `draw.io` build to preserve the
    self-contained nature of this application.
 
-To build a WebJar locally run the following commands inside `drawio_sources/drawio`:
+To build a WebJar locally clone the upstream repository and run Maven from there:
 
-```
+```bash
+git clone https://github.com/xwiki-contrib/draw.io
+cd draw.io
 mvn -Pwebjar clean package
-mvn install:install-file -Dfile=target/draw.io-webjar-27.0.9.jar \
-    -DgroupId=org.xwiki.contrib -DartifactId=draw.io -Dversion=27.0.9 -Dpackaging=jar
 ```
 
-The second command installs the freshly built WebJar in your local Maven repository so
-that the Diagram Application can depend on it during development.
+This produces the artifacts `draw.io-api` and `draw.io-webjar`. The Diagram Application
+only requires the `draw.io-webjar` JAR. You can install it to your local Maven repository
+using `mvn install:install-file` if needed for development.
 
 These guidelines will help updating the code base while maintaining full backward compatibility with
 existing XWiki installations.
