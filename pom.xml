@@ -91,11 +91,25 @@
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>draw.io</artifactId>
-      <!-- Updated to match the provided draw.io 27.x sources -->
-      <version>27.0.9</version>
+      <!-- Use a draw.io WebJar available on the XWiki Nexus -->
+      <version>24.5.5</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>xwiki-nexus</id>
+      <name>XWiki Nexus</name>
+      <url>https://nexus.xwiki.org/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>xwiki-nexus</id>
+      <name>XWiki Nexus</name>
+      <url>https://nexus.xwiki.org/nexus/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <pluginManagement>
       <plugins>
