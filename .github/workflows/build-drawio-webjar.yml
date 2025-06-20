@@ -1,0 +1,30 @@
+name: Build draw.io WebJar and Diagram Application
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '11'
+          cache: maven
+      - name: Clone draw.io packaging project
+        run: git clone https://github.com/xwiki-contrib/draw.io.git /tmp/drawio
+      - name: Build draw.io WebJar
+        run: mvn -Pwebjar clean package --settings ${{ github.workspace }}/.github/maven-settings.xml
+        working-directory: /tmp/drawio
+      - name: Install WebJar to local Maven repo
+        run: |
+          JAR_PATH=$(ls /tmp/drawio/draw.io-webjar/target/*.jar | head -n1)
+          mvn install:install-file -Dfile=$JAR_PATH -DgroupId=org.xwiki.contrib -DartifactId=draw.io \
+            -Dversion=$(basename "$JAR_PATH" | sed -e 's/draw.io-\(.*\)\.jar/\1/') -Dpackaging=jar
+      - name: Build Diagram Application
+        run: mvn -B package --settings .github/maven-settings.xml
