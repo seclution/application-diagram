@@ -291,7 +291,10 @@ require.config({
         version: typeof EditorUi !== 'undefined' ? EditorUi.VERSION : mxClient.VERSION
       });
       return this.each(function() {
-        var xmlDoc = mxUtils.parseXml($(this).data('model'));
+        var xmlString = $(this).data('model');
+        console.debug('Parsing diagram XML', xmlString);
+        var xmlDoc = mxUtils.parseXml(xmlString);
+        console.debug('Parsed diagram DOM', xmlDoc.documentElement);
         console.debug('Displaying diagram element', xmlDoc.documentElement);
         new GraphViewer(this, xmlDoc.documentElement, options);
       }).removeClass('loading');

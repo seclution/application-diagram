@@ -354,7 +354,10 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     open: function() {
       console.debug('Opening diagram file');
       var graphXML = this.getData() || '&lt;mxGraphModel/&gt;';
-      this.ui.editor.setGraphXml(mxUtils.parseXml(graphXML).documentElement);
+      console.debug('Parsing diagram XML', graphXML);
+      var graphDocument = mxUtils.parseXml(graphXML);
+      console.debug('Parsed diagram DOM', graphDocument.documentElement);
+      this.ui.editor.setGraphXml(graphDocument.documentElement);
       this.changeListener = mxUtils.bind(this, function(sender, eventObject) {
         this.setModified(true);
       });
