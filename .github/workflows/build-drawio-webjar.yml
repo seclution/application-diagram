@@ -17,7 +17,7 @@ jobs:
           java-version: '11'
           cache: maven
       - name: Clone draw.io packaging project
-        run: git clone https://github.com/xwiki-contrib/draw.io.git /tmp/drawio
+        run: git clone https://github.com/seclution/draw.io.git /tmp/drawio
       - name: Build draw.io WebJar
         run: mvn -Pwebjar clean package --settings ${{ github.workspace }}/.github/maven-settings.xml
         working-directory: /tmp/drawio

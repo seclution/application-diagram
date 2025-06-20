@@ -30,13 +30,14 @@ Diagram Application.
 ## Updating to a newer draw.io version
 
 This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`).
-The dependency was later switched to `24.5.5` and now targets `27.0.9`.
+The dependency was later switched to `24.5.5` and now targets `27.1.6`.
 The WebJar should be built using the
-[`xwiki-contrib/draw.io`](https://github.com/xwiki-contrib/draw.io)
-repository. When upgrading the application make sure to:
+[`seclution/draw.io`](https://github.com/seclution/draw.io)
+repository which contains the updated packaging. When upgrading the application
+make sure to:
 
 1. Replace the old WebJar dependency in `pom.xml` with a WebJar built from
-   `xwiki-contrib/draw.io`.
+   `seclution/draw.io`.
 2. Keep the current integration logic (editor initialization, macro code, storage format) so that diagrams
    created with older versions can still be opened and saved without changes.
 3. Verify that existing diagrams render correctly with the new editor and that saving them doesn't break
@@ -46,10 +47,13 @@ repository. When upgrading the application make sure to:
 
 To build a WebJar locally perform the following steps:
 
-1. Clone `https://github.com/xwiki-contrib/draw.io`.
+1. Clone `https://github.com/seclution/draw.io`.
 2. Run `mvn -Pwebjar clean package` inside the cloned repository.
 3. Optionally run `mvn -pl draw.io-webjar install` to install the jar in your
    local Maven cache.
+
+The forked repository keeps the draw.io sources up to date and can be used as
+a starting point for additional build customization.
 
 The `draw.io-api` module is not required for this application unless you need
 server-side features.
