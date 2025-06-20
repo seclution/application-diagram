@@ -339,16 +339,20 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       return this.title;
     },
     getData: function() {
+      console.debug('Getting diagram data from input', this.input.attr('name'));
       return this.input.val();
     },
     setData: function(data) {
+      console.debug('Setting diagram data for input', this.input.attr('name'));
       this.input.val(data);
     },
     updateFileData: function() {
       // We overwrite the base implementation because we don't want to support files that contain multiple diagrams.
+      console.debug('Updating stored diagram data');
       this.setData(mxUtils.getPrettyXml(this.ui.editor.getGraphXml()));
     },
     open: function() {
+      console.debug('Opening diagram file');
       var graphXML = this.getData() || '&lt;mxGraphModel/&gt;';
       this.ui.editor.setGraphXml(mxUtils.parseXml(graphXML).documentElement);
       this.changeListener = mxUtils.bind(this, function(sender, eventObject) {
@@ -381,9 +385,13 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     };
 
   // We need to update the form fields before the form is validated (for Preview, Save and Save &amp; Continue).
-  $(document).on('xwiki:actions:beforePreview xwiki:actions:beforeSave', updateFormFields);
+  $(document).on('xwiki:actions:beforePreview xwiki:actions:beforeSave', function() {
+    console.debug('xwiki:actions:beforePreview/beforeSave event');
+    updateFormFields();
+  });
 
   $(document).on('xwiki:actions:beforeSave', function() {
+    console.debug('Preparing diagram SVG before save');
     forEachOpenedFile(function(file) {
       var svgInput = file.input.next('.diagram-svg');
       if (svgInput.length &gt; 0) {
@@ -400,6 +408,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       // We reset the dirty field on 'xwiki:actions:save' only if it's not a Save &amp; Continue. Otherwise we wait for
       // 'xwiki:document:saved' to be sure the document was saved.
       if (!data || !data['continue']) {
+        console.debug('Handling action', event.type);
         submitInProgress = event.type === 'xwiki:actions:preview' || event.type === 'xwiki:actions:save';
         resetDirty();
       }
@@ -409,6 +418,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     // Update the form fields before the page is unloaded in order to allow the browser to cache their values
     // (Back-Forward and Soft Reload cache). The form fields have already been updated (for validation) if a submit
     // is currently in progress.
+    console.debug('beforeunload event');
     if (!submitInProgress) {
       updateFormFields();
     } else {

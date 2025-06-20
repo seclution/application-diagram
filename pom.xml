@@ -92,7 +92,7 @@
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>draw.io</artifactId>
       <!-- Use a draw.io WebJar available on the XWiki Nexus -->
-      <version>24.5.5</version>
+      <version>27.0.9</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
