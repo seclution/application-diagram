@@ -27,6 +27,13 @@ These files are provided only as a reference when upgrading the embedded
 draw.io WebJar and they are **not** used during the build of the Diagram
 Application.
 
+## draw.io-api
+
+The `draw.io-api` library is built from the draw.io packaging repository and
+contains server-side Java helpers (servlets, import tools, etc.). It is currently
+not used by the Diagram Application but it may be handy for building custom
+integrations.
+
 ## Updating to a newer draw.io version
 
 This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`).
