@@ -57,6 +57,7 @@
     <xwiki.clirr.skip>true</xwiki.clirr.skip>
     <!-- There are no java resources in this project. --> 
     <xwiki.revapi.skip>true</xwiki.revapi.skip>
+    <maven.compiler.release>11</maven.compiler.release>
   </properties>
   <dependencies>
     <dependency>
@@ -125,6 +126,11 @@
               <version>10.4.2</version>
             </dependency>
           </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.11.0</version>
         </plugin>
       </plugins>
     </pluginManagement>

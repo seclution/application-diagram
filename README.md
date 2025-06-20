@@ -21,6 +21,7 @@ and note any important changes or debugging improvements.
 * Translations: N/A
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
+* Build environment updated to **Java 17**
 
 The `drawio_sources` directory stores a copy of the upstream draw.io source
 code. These files are provided **only** as a reference when upgrading the
@@ -34,6 +35,7 @@ The script clones the official
 [`jgraph/drawio`](https://github.com/jgraph/drawio) repository by default and
 removes the JARs automatically. A `Refresh draw.io sources` workflow is also
 provided to run the script and push the changes.
+
 
 
 ## draw.io-api
@@ -77,3 +79,35 @@ server-side features.
 
 These guidelines will help updating the code base while maintaining full backward compatibility with
 existing XWiki installations.
+
+## Validating Sample Diagrams
+
+Sample diagrams created with older draw.io versions are stored under the `samples/` directory. A small script is provided to parse these diagrams and ensure they can be loaded by the current viewer/editor.
+
+Run the following command from the repository root:
+
+```bash
+python3 scripts/check_samples.py
+```
+
+The script exits with a non-zero status if any of the sample diagrams fail to load.
+
+
+## Building the Diagram Application
+
+The project is built with **Java 17** and **Maven 3.8+**. The workflow used by
+CI relies on these versions. To produce a XAR package locally you need to first build
+the draw.io WebJar from the [`seclution/draw.io`](https://github.com/seclution/draw.io)
+packaging repository as described in the *Updating to a newer draw.io version*
+section above.
+
+1. Clone the repository and run `mvn -Pwebjar clean package`.
+2. Optionally install the generated jar with `mvn -pl draw.io-webjar install` so
+   that it can be resolved by this project.
+3. Ensure the `pom.xml` depends on your newly built WebJar (groupId
+   `org.xwiki.contrib`, artifactId `draw.io`, and the version you just built).
+4. From the root of this repository run `mvn package` to generate the XAR under
+   `target/`.
+
+For detailed instructions on building the WebJar see the lines 43&ndash;72 of
+this README.

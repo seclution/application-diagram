@@ -353,7 +353,11 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     },
     open: function() {
       console.debug('Opening diagram file');
-      var graphXML = this.getData() || '&lt;mxGraphModel/&gt;';
+      var graphXML = this.getData();
+      if (!graphXML) {
+        console.warn('No diagram data found; starting with empty graph');
+        graphXML = '&lt;mxGraphModel/&gt;';
+      }
       console.debug('Parsing diagram XML', graphXML);
       var graphDocument = mxUtils.parseXml(graphXML);
       console.debug('Parsed diagram DOM', graphDocument.documentElement);
@@ -366,6 +370,9 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   });
 
   var forEachOpenedFile = function(visitor) {
+    if (files.length === 0) {
+      console.warn('No diagram files currently opened');
+    }
     files.forEach(function(file) {
       if (file.getUi() &amp;&amp; file.getUi().getCurrentFile() === file) {
         visitor(file);
@@ -400,6 +407,8 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       if (svgInput.length &gt; 0) {
         var svgRoot = file.getUi().editor.graph.getSvg('#ffffff', true, false, false, null, true);
         svgInput.val(mxUtils.getXml(svgRoot));
+      } else {
+        console.warn('SVG input not found for', file.input.attr('name'));
       }
     });
   });
@@ -738,6 +747,7 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
     mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
   mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(response) {
+    console.debug('Editor resources loaded');
     // Adds bundle text to resources.
     mxResources.parse(response[0].getText());
 
@@ -745,8 +755,9 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     themes[Graph.prototype.defaultThemeName] = response[1].getDocumentElement();
 
     diagramEditorDeferred.resolve();
-  }, function() {
+  }, function(error) {
     // Failed to load resources.
+    console.error('Failed to load editor resources', error);
     diagramEditorDeferred.reject();
   });
 
@@ -849,6 +860,8 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   diagramEditorPromise.done(function() {
       console.debug('Diagram editor module loaded');
       $('.diagram-editor').editDiagram();
+    }).fail(function(error) {
+      console.error('Failed to initialize diagram editor', error);
     });
 });</code>
     </property>

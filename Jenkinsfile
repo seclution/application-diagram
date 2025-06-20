@@ -25,6 +25,6 @@
 // See https://github.com/jenkinsci/workflow-cps-global-lib-plugin for details.
 
 xwikiModule {
-    // Currently doesn't build with java > 11
-  javaTool = 'java11'
+    // Build with Java 17
+    javaTool = 'java17'
 }
