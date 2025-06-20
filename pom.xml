@@ -91,7 +91,8 @@
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>draw.io</artifactId>
-      <version>6.5.7</version>
+      <!-- Updated to match the provided draw.io 27.x sources -->
+      <version>27.0.9</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>

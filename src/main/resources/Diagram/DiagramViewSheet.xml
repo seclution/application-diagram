@@ -283,27 +283,33 @@ require.config({
   // This is required for the clipart images.
   GraphViewer.prototype.imageBaseUrl = getOrigin();
 
-  $.fn.viewDiagram = function(options) {
-    options = $.extend({
-      lightbox: false
-    }, options);
-    return this.each(function() {
-      var xmlDoc = mxUtils.parseXml($(this).data('model'));
-      new GraphViewer(this, xmlDoc.documentElement, options);
-    }).removeClass('loading');
-  };
+    $.fn.viewDiagram = function(options) {
+      options = $.extend({
+        lightbox: false
+      }, options);
+      console.debug('Rendering diagram viewer', {
+        version: typeof EditorUi !== 'undefined' ? EditorUi.VERSION : mxClient.VERSION
+      });
+      return this.each(function() {
+        var xmlDoc = mxUtils.parseXml($(this).data('model'));
+        console.debug('Displaying diagram element', xmlDoc.documentElement);
+        new GraphViewer(this, xmlDoc.documentElement, options);
+      }).removeClass('loading');
+    };
 
   var diagramViewerDeferred = $.Deferred();
   // Load the default theme. The theme controls how the shapes are rendered.
-  mxUtils.get(STYLE_PATH + '/default.xml', function(response) {
-    // Configures the default viewer theme.
-    Graph.prototype.defaultThemes = Graph.prototype.defaultThemes || {};
-    Graph.prototype.defaultThemes[Graph.prototype.defaultThemeName] = response.getDocumentElement();
-    diagramViewerDeferred.resolve();
-  }, function() {
-    // Failed to load the theme.
-    diagramViewerDeferred.reject();
-  });
+    mxUtils.get(STYLE_PATH + '/default.xml', function(response) {
+      console.debug('Loaded viewer theme');
+      // Configures the default viewer theme.
+      Graph.prototype.defaultThemes = Graph.prototype.defaultThemes || {};
+      Graph.prototype.defaultThemes[Graph.prototype.defaultThemeName] = response.getDocumentElement();
+      diagramViewerDeferred.resolve();
+    }, function() {
+      // Failed to load the theme.
+      console.debug('Failed to load viewer theme');
+      diagramViewerDeferred.reject();
+    });
 
   return diagramViewerDeferred.promise();
 });</code>
@@ -402,8 +408,9 @@ require.config({
     <property>
       <code>require(['jquery', 'diagramViewer'], function($, diagramViewerPromise) {
   diagramViewerPromise.done(function() {
-    $('.diagram').viewDiagram();
-  });
+      console.debug('Diagram viewer module loaded');
+      $('.diagram').viewDiagram();
+    });
 });</code>
     </property>
     <property>
