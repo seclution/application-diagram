@@ -1,0 +1,27 @@
+name: Refresh draw.io sources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Update sources
+        run: ./scripts/update-drawio-sources.sh
+      - name: Commit and push
+        run: |
+          git add drawio_sources/drawio
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore: refresh draw.io sources"
+            git push origin HEAD
+          else
+            echo "No changes to commit"
+          fi
