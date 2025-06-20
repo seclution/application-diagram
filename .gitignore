@@ -38,3 +38,6 @@ nbproject
 *.log
 .sonar-ide.properties
 .clover
+# Ignore upstream libraries
+/drawio_sources/drawio/src/main/webapp/WEB-INF/lib/*.jar
+
