@@ -22,18 +22,21 @@ and note any important changes or debugging improvements.
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
 
-The `drawio_sources` directory stores a copy of the upstream draw.io source code.
-These files are provided only as a reference when upgrading the embedded
-draw.io WebJar and they are **not** used during the build of the Diagram
-Application.
+The `drawio_sources` directory hosts an unmodified copy of the upstream
+draw.io project. These files are provided only as a reference when upgrading
+the embedded draw.io WebJar and they are **not** used during the build of the
+Diagram Application.
 
 ## Updating to a newer draw.io version
 
 This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`).
-The dependency was later switched to `24.5.5` and now targets `27.0.9` using the
-sources under `drawio_sources`. When upgrading the application make sure to:
+The dependency was later switched to `24.5.5` and now targets `27.0.9`.
+The WebJar should be built using the
+[`xwiki-contrib/draw.io`](https://github.com/xwiki-contrib/draw.io)
+repository. When upgrading the application make sure to:
 
-1. Replace the old WebJar dependency in `pom.xml` with a WebJar built from the provided sources.
+1. Replace the old WebJar dependency in `pom.xml` with a WebJar built from
+   `xwiki-contrib/draw.io`.
 2. Keep the current integration logic (editor initialization, macro code, storage format) so that diagrams
    created with older versions can still be opened and saved without changes.
 3. Verify that existing diagrams render correctly with the new editor and that saving them doesn't break
@@ -41,16 +44,15 @@ sources under `drawio_sources`. When upgrading the application make sure to:
 4. Ensure that no additional external services are enabled in the new `draw.io` build to preserve the
    self-contained nature of this application.
 
-To build a WebJar locally run the following commands inside `drawio_sources/drawio`:
+To build a WebJar locally perform the following steps:
 
-```
-mvn -Pwebjar clean package
-mvn install:install-file -Dfile=target/draw.io-webjar-27.0.9.jar \
-    -DgroupId=org.xwiki.contrib -DartifactId=draw.io -Dversion=27.0.9 -Dpackaging=jar
-```
+1. Clone `https://github.com/xwiki-contrib/draw.io`.
+2. Run `mvn -Pwebjar clean package` inside the cloned repository.
+3. Optionally run `mvn -pl draw.io-webjar install` to install the jar in your
+   local Maven cache.
 
-The second command installs the freshly built WebJar in your local Maven repository so
-that the Diagram Application can depend on it during development.
+The `draw.io-api` module is not required for this application unless you need
+server-side features.
 
 These guidelines will help updating the code base while maintaining full backward compatibility with
 existing XWiki installations.
