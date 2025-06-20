@@ -73,6 +73,19 @@ server-side features.
 These guidelines will help updating the code base while maintaining full backward compatibility with
 existing XWiki installations.
 
+## Validating Sample Diagrams
+
+Sample diagrams created with older draw.io versions are stored under the `samples/` directory. A small script is provided to parse these diagrams and ensure they can be loaded by the current viewer/editor.
+
+Run the following command from the repository root:
+
+```bash
+python3 scripts/check_samples.py
+```
+
+The script exits with a non-zero status if any of the sample diagrams fail to load.
+
+
 ## Building the Diagram Application
 
 The project is built with **Java 11** and **Maven 3.8+**. The workflow used by
