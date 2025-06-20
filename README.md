@@ -28,6 +28,8 @@ embedded draw.io WebJar and they are *not* used during the build of the Diagram
 Application. Contributors should not attempt to run Maven inside this folder.
 Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-contrib/draw.io)
 repository when building a new WebJar.
+When upgrading, do not commit the libraries located under `src/main/webapp/WEB-INF/lib`. They are produced by the draw.io build and should remain outside version control.
+
 
 ## draw.io-api
 
@@ -82,3 +84,24 @@ python3 scripts/check_samples.py
 ```
 
 The script exits with a non-zero status if any of the sample diagrams fail to load.
+
+
+## Building the Diagram Application
+
+The project is built with **Java 11** and **Maven 3.8+**. The workflow used by
+CI relies on these versions and the application currently fails to build with
+newer Java releases. To produce a XAR package locally you need to first build
+the draw.io WebJar from the [`seclution/draw.io`](https://github.com/seclution/draw.io)
+packaging repository as described in the *Updating to a newer draw.io version*
+section above.
+
+1. Clone the repository and run `mvn -Pwebjar clean package`.
+2. Optionally install the generated jar with `mvn -pl draw.io-webjar install` so
+   that it can be resolved by this project.
+3. Ensure the `pom.xml` depends on your newly built WebJar (groupId
+   `org.xwiki.contrib`, artifactId `draw.io`, and the version you just built).
+4. From the root of this repository run `mvn package` to generate the XAR under
+   `target/`.
+
+For detailed instructions on building the WebJar see the lines 43&ndash;72 of
+this README.
