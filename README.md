@@ -15,3 +15,20 @@ This is a simple application created using [AppWithinMinutes](http://extensions.
 * Translations: N/A
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
+
+## Updating to a newer draw.io version
+
+This repository bundles an outdated `draw.io` WebJar (`6.5.7`). The `drawio_sources` directory includes the
+sources for `draw.io` 27.x which will be used to build an updated WebJar. When upgrading the application
+make sure to:
+
+1. Replace the old WebJar dependency in `pom.xml` with a WebJar built from the provided sources.
+2. Keep the current integration logic (editor initialization, macro code, storage format) so that diagrams
+   created with older versions can still be opened and saved without changes.
+3. Verify that existing diagrams render correctly with the new editor and that saving them doesn't break
+   compatibility with earlier versions of the application.
+4. Ensure that no additional external services are enabled in the new `draw.io` build to preserve the
+   self-contained nature of this application.
+
+These guidelines will help updating the code base while maintaining full backward compatibility with
+existing XWiki installations.
