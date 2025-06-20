@@ -326,8 +326,17 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
       // backward compatibility by detecting the latter and extracting the
       // first diagram's model.
       var graphXML = this.getData() || '&lt;mxGraphModel/&gt;';
-      var doc = mxUtils.parseXml(graphXML);
-      var root = doc.documentElement;
+      var doc, root;
+      try {
+        doc = mxUtils.parseXml(graphXML);
+        root = doc.documentElement;
+      } catch (e) {
+        // Log the stored XML and notify the user so they can fix it.
+        console.error('Failed to parse diagram XML:', graphXML, e);
+        alert('Failed to load the diagram. Please verify the stored XML.');
+        doc = mxUtils.parseXml('&lt;mxGraphModel/&gt;');
+        root = doc.documentElement;
+      }
       if (root.nodeName === 'mxfile') {
         var diagram = root.getElementsByTagName('diagram')[0];
         if (diagram) {
