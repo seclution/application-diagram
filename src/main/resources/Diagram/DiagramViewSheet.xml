@@ -274,8 +274,12 @@ require.config({
       lightbox: false
     }, options);
     return this.each(function() {
-      var xmlDoc = mxUtils.parseXml($(this).data('model'));
-      new GraphViewer(this, xmlDoc.documentElement, options);
+      try {
+        var xmlDoc = mxUtils.parseXml($(this).data('model'));
+        new GraphViewer(this, xmlDoc.documentElement, options);
+      } catch (e) {
+        $(this).text('Unable to load diagram');
+      }
     }).removeClass('loading');
   };
 
