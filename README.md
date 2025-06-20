@@ -16,6 +16,11 @@ This is a simple application created using [AppWithinMinutes](http://extensions.
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
 
+The `drawio_sources` directory stores a copy of the upstream draw.io source code.
+These files are provided only as a reference when upgrading the embedded
+draw.io WebJar and they are **not** used during the build of the Diagram
+Application.
+
 ## Updating to a newer draw.io version
 
 This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`). The dependency
