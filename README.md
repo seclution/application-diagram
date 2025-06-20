@@ -18,8 +18,8 @@ This is a simple application created using [AppWithinMinutes](http://extensions.
 
 ## Updating to a newer draw.io version
 
-This repository bundles an outdated `draw.io` WebJar (`6.5.7`). The `drawio_sources` directory includes the
-sources for `draw.io` 27.x which will be used to build an updated WebJar. When upgrading the application
+This repository used to bundle an outdated `draw.io` WebJar (`6.5.7`). The dependency
+has been updated to `27.0.9` using the sources under `drawio_sources`. When upgrading the application
 make sure to:
 
 1. Replace the old WebJar dependency in `pom.xml` with a WebJar built from the provided sources.

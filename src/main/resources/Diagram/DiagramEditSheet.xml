@@ -366,17 +366,19 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     });
   };
 
-  var updateFormFields = function(event) {
-    forEachOpenedFile(function(file) {
-      file.updateFileData();
-    });
-  };
+    var updateFormFields = function(event) {
+      console.debug('Updating form fields for opened diagram files');
+      forEachOpenedFile(function(file) {
+        file.updateFileData();
+      });
+    };
 
-  var resetDirty = function() {
-    forEachOpenedFile(function(file) {
-      file.setModified(false);
-    });
-  };
+    var resetDirty = function() {
+      console.debug('Resetting editor modified state');
+      forEachOpenedFile(function(file) {
+        file.setModified(false);
+      });
+    };
 
   // We need to update the form fields before the form is validated (for Preview, Save and Save &amp; Continue).
   $(document).on('xwiki:actions:beforePreview xwiki:actions:beforeSave', updateFormFields);
@@ -515,13 +517,17 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
   //
   // Diagram Editor Constructor.
   //
-  var createDiagramEditor = function(options) {
-    options = options || {};
-    var editorUI = new App(new Editor(false, options.themes), options.container);
-    var file = diagramStore.createFile(editorUI, options.input, options.fileName);
-    editorUI.loadFile(options.fileName, true, file);
-    return editorUI;
-  };
+    var createDiagramEditor = function(options) {
+      options = options || {};
+      console.debug('Initializing diagram editor', {
+        version: typeof EditorUi !== 'undefined' ? EditorUi.VERSION : 'unknown'
+      });
+      var editorUI = new App(new Editor(false, options.themes), options.container);
+      var file = diagramStore.createFile(editorUI, options.input, options.fileName);
+      console.debug('Opened diagram file', options.fileName);
+      editorUI.loadFile(options.fileName, true, file);
+      return editorUI;
+    };
 
   //
   // Disable the tabbed UI (setting urlParams['pages'] to '0' is not enough..)
@@ -828,8 +834,9 @@ define('diagramStore', ['jquery', 'draw.io', 'xwiki-events-bridge'], function($)
     <property>
       <code>require(['jquery', 'diagramEditor'], function($, diagramEditorPromise) {
   diagramEditorPromise.done(function() {
-    $('.diagram-editor').editDiagram();
-  });
+      console.debug('Diagram editor module loaded');
+      $('.diagram-editor').editDiagram();
+    });
 });</code>
     </property>
     <property>
