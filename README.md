@@ -21,6 +21,7 @@ and note any important changes or debugging improvements.
 * Translations: N/A
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
+* Build environment updated to **Java 17**
 
 The `drawio_sources` directory stores a copy of the upstream draw.io source
 code. These files are provided **only** as a reference when upgrading the
@@ -88,9 +89,8 @@ The script exits with a non-zero status if any of the sample diagrams fail to lo
 
 ## Building the Diagram Application
 
-The project is built with **Java 11** and **Maven 3.8+**. The workflow used by
-CI relies on these versions and the application currently fails to build with
-newer Java releases. To produce a XAR package locally you need to first build
+The project is built with **Java 17** and **Maven 3.8+**. The workflow used by
+CI relies on these versions. To produce a XAR package locally you need to first build
 the draw.io WebJar from the [`seclution/draw.io`](https://github.com/seclution/draw.io)
 packaging repository as described in the *Updating to a newer draw.io version*
 section above.
