@@ -20,6 +20,16 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Clone draw.io packaging project
+        run: git clone https://github.com/seclution/draw.io.git /tmp/drawio
+      - name: Build draw.io WebJar
+        run: mvn -pl draw.io-webjar clean package --settings ${{ github.workspace }}/.github/maven-settings.xml
+        working-directory: /tmp/drawio
+      - name: Install WebJar to local Maven repo
+        run: |
+          JAR_PATH=$(ls /tmp/drawio/draw.io-webjar/target/*.jar | head -n1)
+          mvn install:install-file -Dfile=$JAR_PATH -DgroupId=org.xwiki.contrib -DartifactId=draw.io \
+            -Dversion=$(basename "$JAR_PATH" | sed -e 's/draw.io-\(.*\)\.jar/\1/') -Dpackaging=jar
       - name: Build with Maven
         run: mvn -B package --settings .github/maven-settings.xml
       - name: Publish Release
