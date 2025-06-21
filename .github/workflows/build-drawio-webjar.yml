@@ -4,10 +4,30 @@ on:
   pull_request:
   push:
     branches: ["**"]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Run unit tests
+        run: mvn -B test --settings .github/maven-settings.xml
+      - name: Validate sample diagrams
+        run: python3 scripts/check_samples.py
+
   build:
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' && github.event_name != 'push'
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
