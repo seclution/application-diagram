@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 REPO_URL="${1:-https://github.com/jgraph/drawio.git}"
+# Optional git reference (tag or commit) to checkout
+REF="${2-}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="${SCRIPT_DIR}/.."
 TARGET_DIR="${REPO_ROOT}/drawio_sources/drawio"
@@ -16,5 +18,10 @@ else
     git submodule add "$REPO_URL" "$TARGET_DIR"
 fi
 
-git submodule update --init --remote "$RELATIVE_DIR"
+git submodule update --init --remote "${TARGET_DIR}"
+
+if [ -n "${REF}" ]; then
+    git -C "${TARGET_DIR}" fetch
+    git -C "${TARGET_DIR}" checkout "${REF}"
+fi
 echo "draw.io sources updated"

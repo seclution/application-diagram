@@ -34,6 +34,7 @@ Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-co
 repository when building a new WebJar.
 When upgrading, do not commit the libraries located under `src/main/webapp/WEB-INF/lib`. They are produced by the draw.io build and should remain outside version control.
 Use `scripts/update-drawio-sources.sh` to refresh the sources when upgrading.
+You can pass a second argument to specify the tag or commit to check out.
 The files under `drawio_sources/drawio` are kept as a **Git submodule** pointing
 to the official [`jgraph/drawio`](https://github.com/jgraph/drawio) repository.
 `scripts/update-drawio-sources.sh` updates this submodule automatically and
