@@ -40,7 +40,6 @@ removes the JARs automatically. A `Refresh draw.io sources` workflow is also
 provided to run the script and push the changes.
 
 
-
 ## draw.io-api
 
 The `draw.io-api` library is built from the draw.io packaging repository and
