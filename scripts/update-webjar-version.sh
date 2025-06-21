@@ -1,6 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+# This script edits pom.xml using xmlstarlet which must be installed.
+if ! command -v xmlstarlet >/dev/null 2>&1; then
+    echo "Error: xmlstarlet is required but was not found in PATH." >&2
+    exit 1
+fi
+
 usage() {
     echo "Usage: $0 <path-to-draw.io-webjar> [--commit]" >&2
     exit 1

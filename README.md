@@ -79,6 +79,7 @@ To build a WebJar locally perform the following steps:
    local Maven cache.
 4. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
    to update the dependency version in `pom.xml`.
+   This script relies on `xmlstarlet` being available in your `PATH`.
 
 The forked repository keeps the draw.io sources up to date and can be used as
 a starting point for additional build customization.
@@ -115,6 +116,7 @@ section above.
    that it can be resolved by this project.
 3. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
    to update `pom.xml` with the WebJar version you just built.
+   Ensure `xmlstarlet` is installed before executing this script.
 4. From the root of this repository run `mvn package` to generate the XAR under
    `target/`.
 
