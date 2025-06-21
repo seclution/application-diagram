@@ -125,3 +125,19 @@ application.
 
 For detailed instructions on building the WebJar see the lines 43&ndash;72 of
 this README.
+
+## Release Process
+
+The GitHub release workflow automatically builds the draw.io WebJar and
+publishes the Diagram Application as a XAR when a tag or release is
+created. Ensure the `pom.xml` contains the correct draw.io version before
+tagging a release.
+
+1. Update `pom.xml` with the WebJar version using
+   `scripts/update-webjar-version.sh` after building the WebJar from the
+   [`seclution/draw.io`](https://github.com/seclution/draw.io) packaging
+   repository.
+2. Commit all changes and create a tag for the release, e.g.
+   `git tag 1.2.3 && git push --tags`.
+3. GitHub Actions will build the WebJar with the same version, install it
+   locally, build the XAR and attach it to the GitHub Release.
