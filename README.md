@@ -123,5 +123,5 @@ The upstream draw.io sources no longer include the `js/grapheditor` directory.
 The packaging repository already bundles the resources required by this
 application.
 
-For detailed instructions on building the WebJar see the lines 43&ndash;72 of
-this README.
+For detailed instructions on building the WebJar see the
+"Updating to a newer draw.io version" section of this README.
