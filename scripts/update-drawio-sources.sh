@@ -23,4 +23,8 @@ if [ -n "${REF}" ]; then
     git -C "${TARGET_DIR}" fetch
     git -C "${TARGET_DIR}" checkout "${REF}"
 fi
+TARGET_LIB_DIR="${TARGET_DIR}/src/main/webapp/WEB-INF/lib"
+if [ -d "${TARGET_LIB_DIR}" ]; then
+    find "${TARGET_LIB_DIR}" -name '*.jar' -delete
+fi
 echo "draw.io sources updated"
