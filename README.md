@@ -27,14 +27,15 @@ and note any important changes or debugging improvements.
 * Build environment updated to **Java 17**
 
 The `drawio_sources` directory stores a copy of the upstream draw.io source
-code. These files are provided **only** as a reference when upgrading the
-embedded draw.io WebJar and they are *not* used during the build of the Diagram
-Application. Contributors should not attempt to run Maven inside this folder.
+code. The folder itself is a **Git submodule**, provided **only** as a
+reference when upgrading the embedded draw.io WebJar and it is *not* used
+during the build of the Diagram Application. Contributors should not attempt to
+run Maven inside this folder.
 Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-contrib/draw.io)
 repository when building a new WebJar.
 When upgrading, do not commit the libraries located under `src/main/webapp/WEB-INF/lib`. They are produced by the draw.io build and should remain outside version control.
-Use `scripts/update-drawio-sources.sh` to refresh the sources when upgrading.
-The script clones the official
+Use `scripts/update-drawio-sources.sh` to refresh the sources when upgrading or
+run `git submodule update --remote` manually. The script clones the official
 [`jgraph/drawio`](https://github.com/jgraph/drawio) repository by default and
 removes the JARs automatically. A `Refresh draw.io sources` workflow is also
 provided to run the script and push the changes.
