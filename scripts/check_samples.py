@@ -14,8 +14,8 @@ def check_file(path: pathlib.Path):
         if not diagrams:
             return 'No <diagram> elements found'
         for d in diagrams:
-            # Ensure the inner XML is well formed
-            ET.fromstring(d.tostring() if hasattr(d, 'tostring') else ET.tostring(d))
+            # Ensure the inner XML is well formed for both standard and lxml implementations
+            ET.fromstring(ET.tostring(d))
     except Exception as e:
         return str(e)
     return None
