@@ -23,6 +23,7 @@ and note any important changes or debugging improvements.
 * Sonar Dashboard: N/A
 * Continuous Integration Status: [![Build Status](https://ci.xwiki.org/job/XWiki%20Contrib/job/application-diagram/job/master/badge/icon)](https://ci.xwiki.org/view/Contrib/job/XWiki%20Contrib/job/application-diagram/job/master/)
 * Build environment updated to **Java 17**
+* After cloning run `git submodule update --init` to populate `drawio_sources/drawio`
 
 The `drawio_sources` directory stores a copy of the upstream draw.io source
 code. These files are provided **only** as a reference when upgrading the
