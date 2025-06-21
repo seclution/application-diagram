@@ -70,6 +70,8 @@ To build a WebJar locally perform the following steps:
 2. Run `mvn -Pwebjar clean package` inside the cloned repository.
 3. Optionally run `mvn -pl draw.io-webjar install` to install the jar in your
    local Maven cache.
+4. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
+   to update the dependency version in `pom.xml`.
 
 The forked repository keeps the draw.io sources up to date and can be used as
 a starting point for additional build customization.
@@ -104,8 +106,8 @@ section above.
 1. Clone the repository and run `mvn -Pwebjar clean package`.
 2. Optionally install the generated jar with `mvn -pl draw.io-webjar install` so
    that it can be resolved by this project.
-3. Ensure the `pom.xml` depends on your newly built WebJar (groupId
-   `org.xwiki.contrib`, artifactId `draw.io`, and the version you just built).
+3. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
+   to update `pom.xml` with the WebJar version you just built.
 4. From the root of this repository run `mvn package` to generate the XAR under
    `target/`.
 
