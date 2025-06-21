@@ -1,0 +1,32 @@
+name: Sync draw.io sources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Determine draw.io version
+        id: vars
+        run: |
+          VERSION=$(grep -A2 "<artifactId>draw.io</artifactId>" pom.xml | grep -m1 "<version>" | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          echo "drawio_version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Update sources
+        run: ./scripts/update-drawio-sources.sh https://github.com/jgraph/drawio.git "v${{ steps.vars.outputs.drawio_version }}"
+      - name: Commit and push
+        run: |
+          git add drawio_sources/drawio
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore: sync draw.io sources to ${{ steps.vars.outputs.drawio_version }}"
+            git push
+          else
+            echo "No changes to commit"
+          fi

@@ -35,6 +35,9 @@ The script clones the official
 [`jgraph/drawio`](https://github.com/jgraph/drawio) repository by default and
 removes the JARs automatically. A `Refresh draw.io sources` workflow is also
 provided to run the script and push the changes.
+The current reference snapshot corresponds to tag `v27.1.6`
+(commit `7114e2037b400fabce0824bfc8f20703eeda5fd4`). Update this note whenever
+the sources are refreshed.
 
 
 
