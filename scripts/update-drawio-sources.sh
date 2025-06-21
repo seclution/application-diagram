@@ -4,12 +4,18 @@ REPO_URL="${1:-https://github.com/jgraph/drawio.git}"
 # Optional git reference (tag or commit) to checkout
 REF="${2-}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TARGET_DIR="${SCRIPT_DIR}/../drawio_sources/drawio"
+REPO_ROOT="${SCRIPT_DIR}/.."
+TARGET_DIR="${REPO_ROOT}/drawio_sources/drawio"
+RELATIVE_DIR="drawio_sources/drawio"
 
-if [ ! -d "${TARGET_DIR}/.git" ]; then
-    git submodule add "$REPO_URL" "$TARGET_DIR"
-else
+
+if git submodule status "${TARGET_DIR}" >/dev/null 2>&1; then
+    if [ ! -d "${TARGET_DIR}/.git" ]; then
+        git submodule update --init "${TARGET_DIR}"
+    fi
     git -C "${TARGET_DIR}" remote set-url origin "$REPO_URL"
+else
+    git submodule add "$REPO_URL" "$TARGET_DIR"
 fi
 
 git submodule update --init --remote "${TARGET_DIR}"
