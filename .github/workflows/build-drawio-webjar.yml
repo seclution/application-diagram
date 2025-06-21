@@ -19,7 +19,7 @@ jobs:
       - name: Clone draw.io packaging project
         run: git clone https://github.com/seclution/draw.io.git /tmp/drawio
       - name: Build draw.io WebJar
-        run: mvn -Pwebjar clean package --settings ${{ github.workspace }}/.github/maven-settings.xml
+        run: mvn -pl draw.io-webjar clean package --settings ${{ github.workspace }}/.github/maven-settings.xml
         working-directory: /tmp/drawio
       - name: Install WebJar to local Maven repo
         run: |
