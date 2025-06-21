@@ -28,9 +28,9 @@ JAR_FILE="$(basename "$JAR_PATH")"
 VERSION="${JAR_FILE#draw.io-}"
 VERSION="${VERSION%.jar}"
 
-# Update pom.xml dependency version
+# Update pom.xml draw.io version property
 xmlstarlet ed -L \
-    -u "/_:project/_:dependencies/_:dependency[_:groupId='org.xwiki.contrib'][_:artifactId='draw.io']/_:version" \
+    -u "/_:project/_:properties/_:drawio.version" \
     -v "$VERSION" pom.xml
 
 echo "Updated pom.xml to use draw.io version $VERSION"
