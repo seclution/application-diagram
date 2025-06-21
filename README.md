@@ -34,10 +34,12 @@ Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-co
 repository when building a new WebJar.
 When upgrading, do not commit the libraries located under `src/main/webapp/WEB-INF/lib`. They are produced by the draw.io build and should remain outside version control.
 Use `scripts/update-drawio-sources.sh` to refresh the sources when upgrading.
-The script clones the official
-[`jgraph/drawio`](https://github.com/jgraph/drawio) repository by default and
-removes the JARs automatically. A `Refresh draw.io sources` workflow is also
-provided to run the script and push the changes.
+The files under `drawio_sources/drawio` are kept as a **Git submodule** pointing
+to the official [`jgraph/drawio`](https://github.com/jgraph/drawio) repository.
+`scripts/update-drawio-sources.sh` updates this submodule automatically and
+removes the JARs. You can also run `git submodule update --remote` to fetch the
+latest upstream changes. A `Refresh draw.io sources` workflow is provided to run
+the script and push the updates.
 The current reference snapshot corresponds to tag `v27.1.6`
 (commit `7114e2037b400fabce0824bfc8f20703eeda5fd4`). Update this note whenever
 the sources are refreshed.
@@ -72,7 +74,7 @@ make sure to:
 To build a WebJar locally perform the following steps:
 
 1. Clone `https://github.com/seclution/draw.io`.
-2. Run `mvn -Pwebjar clean package` inside the cloned repository.
+2. Run `mvn -pl draw.io-webjar clean package` inside the cloned repository.
 3. Optionally run `mvn -pl draw.io-webjar install` to install the jar in your
    local Maven cache.
 4. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
@@ -108,13 +110,17 @@ the draw.io WebJar from the [`seclution/draw.io`](https://github.com/seclution/d
 packaging repository as described in the *Updating to a newer draw.io version*
 section above.
 
-1. Clone the repository and run `mvn -Pwebjar clean package`.
+1. Clone the repository and run `mvn -pl draw.io-webjar clean package`.
 2. Optionally install the generated jar with `mvn -pl draw.io-webjar install` so
    that it can be resolved by this project.
 3. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
    to update `pom.xml` with the WebJar version you just built.
 4. From the root of this repository run `mvn package` to generate the XAR under
    `target/`.
+
+The upstream draw.io sources no longer include the `js/grapheditor` directory.
+The packaging repository already bundles the resources required by this
+application.
 
 For detailed instructions on building the WebJar see the lines 43&ndash;72 of
 this README.
