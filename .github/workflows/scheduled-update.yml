@@ -1,0 +1,58 @@
+name: Scheduled draw.io Update
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Get latest draw.io tag
+        id: latest
+        run: |
+          TAG=$(curl -sL https://api.github.com/repos/jgraph/drawio/releases/latest | jq -r '.tag_name')
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      - name: Current draw.io version
+        id: current
+        run: |
+          VERSION=$(grep -A2 '<artifactId>draw.io</artifactId>' pom.xml | grep -m1 '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Check if update needed
+        id: check
+        run: |
+          if [ "${{ steps.latest.outputs.tag }}" = "v${{ steps.current.outputs.version }}" ]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Update draw.io sources
+        if: steps.check.outputs.up_to_date == 'false'
+        run: scripts/update-drawio-sources.sh https://github.com/jgraph/drawio.git "${{ steps.latest.outputs.tag }}"
+      - name: Update pom.xml version
+        if: steps.check.outputs.up_to_date == 'false'
+        run: |
+          DUMMY=/tmp/draw.io-${{ steps.latest.outputs.tag }}.jar
+          touch "$DUMMY"
+          scripts/update-webjar-version.sh "$DUMMY"
+      - name: Commit and push changes
+        if: steps.check.outputs.up_to_date == 'false'
+        run: |
+          git add drawio_sources/drawio pom.xml
+          git commit -m "chore: upgrade draw.io to ${{ steps.latest.outputs.tag }}"
+          git push origin HEAD
+      - name: Trigger build workflow
+        if: steps.check.outputs.up_to_date == 'false'
+        run: |
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-drawio-webjar.yml/dispatches" \
+            -d "{\"ref\":\"$BRANCH\"}"
