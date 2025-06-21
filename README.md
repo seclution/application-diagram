@@ -30,7 +30,7 @@ The `drawio_sources` directory stores a copy of the upstream draw.io source
 code. These files are provided **only** as a reference when upgrading the
 embedded draw.io WebJar and they are *not* used during the build of the Diagram
 Application. Contributors should not attempt to run Maven inside this folder.
-Instead, clone the dedicated [xwiki-contrib/draw.io](https://github.com/xwiki-contrib/draw.io)
+Instead, clone the dedicated [seclution/draw.io](https://github.com/seclution/draw.io)
 repository when building a new WebJar.
 When upgrading, do not commit the libraries located under `src/main/webapp/WEB-INF/lib`. They are produced by the draw.io build and should remain outside version control.
 Use `scripts/update-drawio-sources.sh` to refresh the sources when upgrading.
