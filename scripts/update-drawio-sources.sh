@@ -6,7 +6,6 @@ REF="${2-}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="${SCRIPT_DIR}/.."
 TARGET_DIR="${REPO_ROOT}/drawio_sources/drawio"
-RELATIVE_DIR="drawio_sources/drawio"
 
 
 if git submodule status "${TARGET_DIR}" >/dev/null 2>&1; then
