@@ -58,6 +58,7 @@
     <!-- There are no java resources in this project. --> 
     <xwiki.revapi.skip>true</xwiki.revapi.skip>
     <maven.compiler.release>11</maven.compiler.release>
+    <drawio.version>27.1.6</drawio.version>
   </properties>
   <dependencies>
     <dependency>
@@ -93,7 +94,7 @@
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>draw.io</artifactId>
       <!-- Use a draw.io WebJar available on the XWiki Nexus -->
-      <version>27.1.6</version>
+      <version>${drawio.version}</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>

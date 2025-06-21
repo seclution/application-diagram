@@ -78,7 +78,7 @@ To build a WebJar locally perform the following steps:
 3. Optionally run `mvn -pl draw.io-webjar install` to install the jar in your
    local Maven cache.
 4. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
-   to update the dependency version in `pom.xml`.
+   to update the `drawio.version` property in `pom.xml`.
    This script relies on `xmlstarlet` being available in your `PATH`.
 
 The forked repository keeps the draw.io sources up to date and can be used as
@@ -115,7 +115,7 @@ section above.
 2. Optionally install the generated jar with `mvn -pl draw.io-webjar install` so
    that it can be resolved by this project.
 3. Run `scripts/update-webjar-version.sh /path/to/draw.io-webjar/target/*.jar`
-   to update `pom.xml` with the WebJar version you just built.
+   to update the `drawio.version` property with the WebJar version you just built.
    Ensure `xmlstarlet` is installed before executing this script.
 4. From the root of this repository run `mvn package` to generate the XAR under
    `target/`.
@@ -134,7 +134,7 @@ publishes the Diagram Application as a XAR when a tag or release is
 created. Ensure the `pom.xml` contains the correct draw.io version before
 tagging a release.
 
-1. Update `pom.xml` with the WebJar version using
+1. Update the `drawio.version` property in `pom.xml` using
    `scripts/update-webjar-version.sh` after building the WebJar from the
    [`seclution/draw.io`](https://github.com/seclution/draw.io) packaging
    repository.
