@@ -46,6 +46,11 @@ jobs:
       - name: Build draw.io WebJar
         run: mvn -pl draw.io-webjar -am clean package --settings ${{ github.workspace }}/.github/maven-settings.xml
         working-directory: /tmp/drawio
+      - name: Install draw.io parent POM
+        run: |
+          mvn install:install-file -Dfile=/tmp/drawio/pom.xml \
+            -DgroupId=org.xwiki.contrib -DartifactId=draw.io-parent \
+            -Dversion=${{ steps.vars.outputs.drawio_version }}-1-SNAPSHOT -Dpackaging=pom
       - name: Install WebJar to local Maven repo
         run: |
           JAR_PATH=$(ls /tmp/drawio/draw.io-webjar/target/*.jar | head -n1)
