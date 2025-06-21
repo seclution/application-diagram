@@ -142,4 +142,8 @@ tagging a release.
    `git tag 1.2.3 && git push --tags`.
 3. GitHub Actions will build the WebJar with the same version, install it
    locally, build the XAR and attach it to the GitHub Release.
+4. The release workflow can also be triggered manually from the **Actions**
+   tab by selecting *Build and Release XAR* and using **Run workflow**. The
+   workflow reads the draw.io version from `pom.xml` to build the WebJar
+   so make sure this file is up to date before running it.
 
