@@ -6,6 +6,8 @@ Create various types of diagrams using [draw.io](https://www.draw.io/).
 This is a simple application created using [AppWithinMinutes](http://extensions.xwiki.org/xwiki/bin/view/Extension/App+Within+Minutes+Application) and integrating [jgraph/draw.io](https://github.com/jgraph/draw.io/). It supports both editing and viewing diagrams. Each diagram is stored in a wiki page. It doesn't require any external services in order to work properly.
 See [docs/integration.md](docs/integration.md) for details on how the editor is embedded and configured.
 
+See [docs/integration.md](docs/integration.md) for details on how macros and WebJar paths integrate draw.io with XWiki.
+
 ## Development Notes
 
 All updates to this application should be documented in this file to keep track
