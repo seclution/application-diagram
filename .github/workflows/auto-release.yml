@@ -1,0 +1,89 @@
+name: Auto Release on Draw.io Update
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Get current draw.io version
+        id: current
+        run: |
+          VERSION=$(grep -A2 "<artifactId>draw.io</artifactId>" pom.xml | grep -m1 "<version>" | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Get latest draw.io version
+        id: latest
+        run: |
+          LATEST=$(curl -s https://api.github.com/repos/jgraph/drawio/releases/latest | jq -r .tag_name)
+          LATEST=${LATEST#v}
+          echo "version=$LATEST" >> "$GITHUB_OUTPUT"
+      - name: Check for update
+        id: update
+        run: |
+          if [ "${{ steps.current.outputs.version }}" != "${{ steps.latest.outputs.version }}" ]; then
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "update=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Stop if no update needed
+        if: steps.update.outputs.update == 'false'
+        run: echo "No new version"
+      - name: Install xmlstarlet
+        if: steps.update.outputs.update == 'true'
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+      - name: Update draw.io sources
+        if: steps.update.outputs.update == 'true'
+        run: ./scripts/update-drawio-sources.sh https://github.com/jgraph/drawio.git "v${{ steps.latest.outputs.version }}"
+      - name: Clone draw.io packaging project
+        if: steps.update.outputs.update == 'true'
+        run: git clone https://github.com/seclution/draw.io.git /tmp/drawio
+      - name: Build draw.io WebJar
+        if: steps.update.outputs.update == 'true'
+        run: mvn -pl draw.io-webjar clean package -Ddraw.io.version=${{ steps.latest.outputs.version }} --settings ${{ github.workspace }}/.github/maven-settings.xml
+        working-directory: /tmp/drawio
+      - name: Install WebJar to local repo
+        if: steps.update.outputs.update == 'true'
+        id: jar
+        run: |
+          JAR_PATH=$(ls /tmp/drawio/draw.io-webjar/target/*.jar | head -n1)
+          mvn install:install-file -Dfile=$JAR_PATH -DgroupId=org.xwiki.contrib -DartifactId=draw.io -Dversion=$(basename "$JAR_PATH" | sed -e 's/draw.io-\(.*\)\.jar/\1/') -Dpackaging=jar
+          echo "path=$JAR_PATH" >> "$GITHUB_OUTPUT"
+      - name: Update pom.xml version
+        if: steps.update.outputs.update == 'true'
+        run: scripts/update-webjar-version.sh "${{ steps.jar.outputs.path }}"
+      - name: Commit source changes
+        if: steps.update.outputs.update == 'true'
+        run: |
+          git add pom.xml drawio_sources/drawio
+          git commit -m "chore: update to draw.io ${{ steps.latest.outputs.version }}"
+      - name: Build application
+        if: steps.update.outputs.update == 'true'
+        run: mvn -B package --settings .github/maven-settings.xml
+      - name: Push changes
+        if: steps.update.outputs.update == 'true'
+        run: git push origin HEAD
+      - name: Create and push tag
+        if: steps.update.outputs.update == 'true'
+        run: |
+          git tag "v${{ steps.latest.outputs.version }}"
+          git push origin "v${{ steps.latest.outputs.version }}"
+      - name: Publish Release
+        if: steps.update.outputs.update == 'true'
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: target/*.xar
+          tag: "v${{ steps.latest.outputs.version }}"
+          allowUpdates: true
