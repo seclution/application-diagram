@@ -6,10 +6,14 @@ REPO_ROOT="${SCRIPT_DIR}/.."
 TARGET_DIR="${REPO_ROOT}/drawio_sources/drawio"
 RELATIVE_DIR="drawio_sources/drawio"
 
-if git submodule status "$RELATIVE_DIR" > /dev/null 2>&1; then
-    git submodule set-url "$RELATIVE_DIR" "$REPO_URL"
+
+if git submodule status "${TARGET_DIR}" >/dev/null 2>&1; then
+    if [ ! -d "${TARGET_DIR}/.git" ]; then
+        git submodule update --init "${TARGET_DIR}"
+    fi
+    git -C "${TARGET_DIR}" remote set-url origin "$REPO_URL"
 else
-    git submodule add "$REPO_URL" "$RELATIVE_DIR"
+    git submodule add "$REPO_URL" "$TARGET_DIR"
 fi
 
 git submodule update --init --remote "$RELATIVE_DIR"
